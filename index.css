@@ -1,0 +1,17 @@
+.output {
+  display: flex;
+}
+
+.letter-line {
+  display: flex;
+  flex-direction: column;
+}
+
+.cell {
+  padding: 1rem;
+  border: 1px solid gray;
+}
+
+.letter-cell {
+  font-weight: bold;
+}
