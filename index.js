@@ -7,21 +7,36 @@ $(function () {
   let code;
   let current_card;
 
+  function handleMouseMoveEvent(e) {
+    const { currentTarget: target } = e;
+
+    const rect = target.getBoundingClientRect(),
+      x = e.clientX - rect.left,
+      y = e.clientY - rect.top;
+
+    target.style.setProperty("--mouse-x", `${x}px`);
+    target.style.setProperty("--mouse-y", `${y}px`);
+  }
+
+  $(".body-container").on("mousemove", function (e) {
+    handleMouseMoveEvent(e);
+  });
+
   function getCard(withNewCode = false) {
-    $.ajax({
-      method: "GET",
-      url: `http://www.hyeumine.com/getcard.php?bcode=${code}`,
-      success: function (data, status) {
-        try {
+    try {
+      if (!code) throw new Error("Please enter valid code!");
+
+      $.ajax({
+        method: "GET",
+        url: `http://www.hyeumine.com/getcard.php?bcode=${code}`,
+        success: function (data, _) {
           data = JSON.parse(data);
           current_card = data;
 
           if (!current_card) throw new Error(`Code ${code} not found!`);
 
-          $("#game-header").html(`Game Code: <u>${code}</u>`);
-          $("#game-token").html(
-            `Playcard Token: <u>${current_card.playcard_token}</u>`
-          );
+          $("#game-header").html(`GAME CODE: <u>${code}</u>`);
+          $("#game-token").html(`TOKEN: <u>${current_card.playcard_token}</u>`);
 
           if (withNewCode) {
             $("#get_card").fadeOut();
@@ -29,11 +44,12 @@ $(function () {
               $("#show_card").fadeIn();
             }, 600);
           }
+
           let res = "";
 
           for (const letter of "BINGO") {
             res += `<div class="letter-line">
-                      <span class="cell">${letter}</span>`;
+                      <span class="header-cell">${letter}</span>`;
             for (const num of current_card.card[letter]) {
               res += `<span class="cell">${num}</span>`;
             }
@@ -44,11 +60,15 @@ $(function () {
           $(".letter-line > span:not(:first-child)").on("click", function () {
             $(this).toggleClass("clicked");
           });
-        } catch (e) {
-          alert(e.message);
-        }
-      },
-    });
+
+          $(".cell").on("mousemove", function (e) {
+            handleMouseMoveEvent(e);
+          });
+        },
+      });
+    } catch (e) {
+      alert(e.message);
+    }
   }
 
   $("#enter-code").on("click", function () {
@@ -85,5 +105,9 @@ $(function () {
         }
       },
     });
+  });
+
+  $("#open-dashboard").on("click", function () {
+    window.location.href = `http://www.hyeumine.com/bingodashboard.php?bcode=${code}`;
   });
 });

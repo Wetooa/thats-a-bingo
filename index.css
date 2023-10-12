@@ -1,19 +1,37 @@
 :root {
   font-size: 18px;
+  --bg-color: rgba(255, 255, 255, 0.075);
+  --card-letter-color: rgb(255, 130, 130);
+  --card-color: rgb(253, 201, 105);
+  --container-color: rgb(250, 222, 169);
+  --card-hovered-color: rgba(255, 177, 33, 0.8);
 }
 
 * {
   padding: 0;
   margin: 0;
   font-family: "Inter", sans-serif;
+  z-index: 2;
 }
 
 .body-container {
   width: 100vw;
   height: 100vh;
-  background: radial-gradient(skyblue, white);
+  background: url("./img/imgimg.jpg.crdownload");
+  background-size: cover;
+  opacity: 0.9;
   display: flex;
   justify-content: center;
+  position: relative;
+}
+
+.show-card,
+.get-card {
+  background: radial-gradient(white, var(--container-color));
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 1px solid var(--card-color);
+  border: 2px solid white;
 }
 
 .bingo-h3 {
@@ -46,6 +64,7 @@
   flex-direction: column;
 }
 
+.header-cell,
 .cell {
   width: 4rem;
   height: 4rem;
@@ -53,39 +72,58 @@
   justify-content: center;
   align-items: center;
   border: 1px solid gray;
-  background-color: wheat;
+  background-color: var(--card-color);
+  position: relative;
+  cursor: pointer;
 }
 
-.letter-line > span:hover {
-  transition: all 300ms ease-in-out;
-  opacity: 0.9;
-  scale: 1.01;
+.header-cell {
+  background-color: var(--card-letter-color);
+  font-weight: 900;
 }
 
-.letter-line > span:first-child {
-  font-weight: bold;
-  background-color: rgb(255, 130, 130);
+.body-container:hover::before,
+.cell:hover::before {
+  opacity: 1;
 }
 
-.bingo-modal {
+.body-container::before,
+.cell::before {
+  opacity: 0;
+  transition: opacity 200ms;
+  border-radius: inherit;
+  content: "";
+  height: 100%;
+  left: 0px;
   position: absolute;
-  top: 1rem;
-  left: 1rem;
-  width: 15rem;
-  height: 8rem;
-  border-radius: 1rem;
+  top: 0px;
+  width: 100%;
 }
 
-.modal-positive {
-  border: 2px solid rgb(143, 143, 255);
-  background: linear-gradient(rgb(136, 196, 235), rgb(87, 120, 150));
+.cell::before {
+  background: radial-gradient(
+    200px circle at var(--mouse-x) var(--mouse-y),
+    var(--card-hovered-color),
+    transparent 30%
+  );
+  z-index: 2;
 }
 
-.modal-negative {
-  border: 2px solid rgb(255, 203, 143);
-  background: linear-gradient(rgb(235, 192, 136), rgb(150, 112, 87));
+.body-container::before {
+  background: radial-gradient(
+    1300px circle at var(--mouse-x) var(--mouse-y),
+    var(--bg-color),
+    transparent 40%
+  );
+  z-index: 0;
 }
 
 .clicked {
   background-color: rgb(241, 178, 61);
+}
+
+.toast-absolute {
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
 }
