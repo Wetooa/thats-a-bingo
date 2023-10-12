@@ -22,31 +22,67 @@
       integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
       crossorigin="anonymous"
     ></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+
     <script></script>
   </head>
   <body>
-    <main class="container">
-      <section id="get_card">
-        <h3>Enter your game code here:</h3>
-        <div class="form-floating mb-3">
-          <input
-            type="text"
-            class="form-control"
-            id="code-input"
-            placeholder="ex. 123456"
-            value="HEelhJos"
-          />
-          <label for="floatingInput">Game Code</label>
-          <button id="enter-code" type="button" class="btn btn-primary">
-            Enter code
-          </button>
-        </div>
-      </section>
+    <main class="body-container">
+      <div class="center">
+        <section id="get_card" class="center">
+          <h3 class="bingo-h3">Enter your game code here:</h3>
+          <div class="form-floating mb-3 center">
+            <input
+              type="text"
+              class="form-control"
+              id="code-input"
+              placeholder="ex. 123456"
+              value="HEelhJos"
+            />
+            <label for="floatingInput">Game Code</label>
+            <button
+              id="enter-code"
+              type="button"
+              class="btn btn-primary"
+              style="margin-top: 5px"
+            >
+              Enter code
+            </button>
+          </div>
+        </section>
 
-      <section id="show_card">
-        <h2 id="game-header"></h2>
-        <div id="output" class="output"></div>
-      </section>
+        <section id="show_card" class="center bingo-container">
+          <h3 id="game-header" class="bingo-h3"></h3>
+          <h3 id="game-token" class="bingo-h2"></h3>
+          <div id="output" class="output"></div>
+          <div>
+            <button id="check-winning" type="button" class="btn btn-primary">
+              Check Winning
+            </button>
+
+            <button id="reload" type="button" class="btn btn-warning">
+              Get New Card
+            </button>
+
+            <button id="change-code" type="button" class="btn btn-secondary">
+              Get New Code
+            </button>
+          </div>
+        </section>
+      </div>
     </main>
+
+    <div class="bingo-modal modal-positive center" id="win">
+      <h3 class="bingo-h3">Wow you won!</h3>
+    </div>
+    <div class="bingo-modal modal-negative center" id="lose">
+      <h3 class="bingo-h3">U LOSTTTTT!</h3>
+    </div>
   </body>
 </html>

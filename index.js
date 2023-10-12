@@ -1,32 +1,89 @@
 $(function () {
   $("#show_card").hide();
 
-  $("#enter-code").on("click", function () {
-    let code = $("#code-input").val();
+  $("#win").hide();
+  $("#lose").hide();
 
-    $.get(
-      `http://www.hyeumine.com/getcard.php?bcode=${code}`,
-      function (data, status) {
-        data = JSON.parse(data);
-        console.log(data);
-        if (data) {
-          $("#get_card").hide();
-          $("#show_card").fadeIn();
-          $("#game-header").text(`Game Code: ${code}`);
+  let code;
+  let current_card;
+
+  function getCard(withNewCode = false) {
+    $.ajax({
+      method: "GET",
+      url: `http://www.hyeumine.com/getcard.php?bcode=${code}`,
+      success: function (data, status) {
+        try {
+          data = JSON.parse(data);
+          current_card = data;
+
+          if (!current_card) throw new Error(`Code ${code} not found!`);
+
+          $("#game-header").html(`Game Code: <u>${code}</u>`);
+          $("#game-token").html(
+            `Playcard Token: <u>${current_card.playcard_token}</u>`
+          );
+
+          if (withNewCode) {
+            $("#get_card").fadeOut();
+            setTimeout(() => {
+              $("#show_card").fadeIn();
+            }, 600);
+          }
+          let res = "";
 
           for (const letter of "BINGO") {
-            let res = `<div class="letter-line">
-                        <span class="cell letter-cell">${letter}</span>`;
-            for (const num of data.card[letter]) {
+            res += `<div class="letter-line">
+                      <span class="cell">${letter}</span>`;
+            for (const num of current_card.card[letter]) {
               res += `<span class="cell">${num}</span>`;
             }
             res += "</div>";
-            $("#output").append(res);
           }
-        } else {
-          alert(`Code ${code} not found!`);
+
+          $("#output").html(res);
+          $(".letter-line > span:not(:first-child)").on("click", function () {
+            $(this).toggleClass("clicked");
+          });
+        } catch (e) {
+          alert(e.message);
         }
-      }
-    );
+      },
+    });
+  }
+
+  $("#enter-code").on("click", function () {
+    code = $("#code-input").val();
+    getCard(true);
+  });
+
+  $("#reload").on("click", function () {
+    getCard();
+  });
+
+  $("#change-code").on("click", function () {
+    $("#show_card").fadeOut();
+    setTimeout(() => {
+      $("#get_card").fadeIn();
+    }, 600);
+  });
+
+  $("#check-winning").on("click", function () {
+    $.ajax({
+      method: "GET",
+      url: `http://www.hyeumine.com/checkwin.php?playcard_token=${current_card.playcard_token}`,
+      success: function (data, status) {
+        if (data) {
+          $("#win").slideDown();
+          setTimeout(() => {
+            $("#win").slideUp();
+          }, 2000);
+        } else {
+          $("#lose").slideDown();
+          setTimeout(() => {
+            $("#lose").slideUp();
+          }, 2000);
+        }
+      },
+    });
   });
 });
